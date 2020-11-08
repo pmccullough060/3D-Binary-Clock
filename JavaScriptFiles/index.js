@@ -38,10 +38,7 @@ window.addEventListener('resize', ()=> {
     camera.updateProjectionMatrix();
 });
 
-function render(){
-    requestAnimationFrame( render );
-    renderer.render(scene, camera);
-}
+
 
 var hoursFirst, hoursSecond, minutesFirst, minutesSecond, secondsFirst, secondsSecond, ArrayContainer;
 
@@ -80,41 +77,24 @@ function ChangeColour(sphere){ //Changes the colour of the ball thingies dependi
 
 Clock();
 function Clock(){ //the logic of representing time in binary x :)
-    var d = new Date();
-    var hour = d.getHours();
+    var timeArray = timeConvert();
 
-    for(var i = 0; i < 2; i++){
-        var hourInt = IntAtIndex(hour, i);
-        var hourBin = IntToBin(hourInt);
+    for(var i = 0; i < timeArray.length; i++){
+        var currentBin = IntToBin(timeArray[i]);
 
-        console.log(ArrayContainer);
-
-        for(var j = hourBin.length; j > 0; j--){ //iterating from the "tail" of the binary string to the "head"...
-            if(hourBin.charAt(j-1) == 1){
-                ChangeColour(ArrayContainer[i][j]);
-            }   
+        for(var j = currentBin.length; j > 0; j--){
+            if(currentBin.charAt(j-1) == 1)
+                ChangeColour(ArrayContainer[i][j-1]);
         }
     }
 }
 
-timeConvert();
 function timeConvert(){ // converts -> 11:04:43 to [1,1,0,4,4,3] so it can be displayed on the binary clock
     var date = new Date();
     var dateString = date.toTimeString().split(' ')[0]; //getting HH:MM:SS format
-    dateString = dateString.replace(/:/gi,'');
-
-
-    var timeArray = new Array(5);
-
-    
-
-
+    dateString = dateString.replace(/:/gi,''); //getting HHMMSS format.
+    var timeArray = dateString.split('').map(Number); //getting an array of integer values...
     return timeArray;
-}
-
-function IntAtIndex(integerValue, index){
-    var charAtIndex = integerValue.toString().charAt(index); //gets the first value 1 of 10 etc..
-    return parseInt(charAtIndex);
 }
 
 function IntToBin(int){
@@ -124,4 +104,11 @@ function IntToBin(int){
 var axisHelper = new THREE.AxesHelper(5);
 scene.add(axisHelper);
 
-renderer.render(scene, camera);
+render();
+
+function render(){
+    Clock();
+    requestAnimationFrame( render );
+    renderer.render(scene, camera);
+}
+
