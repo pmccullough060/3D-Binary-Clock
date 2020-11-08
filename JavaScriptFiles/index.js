@@ -38,8 +38,6 @@ window.addEventListener('resize', ()=> {
     camera.updateProjectionMatrix();
 });
 
-
-
 var hoursFirst, hoursSecond, minutesFirst, minutesSecond, secondsFirst, secondsSecond, ArrayContainer;
 
 buildClock();
@@ -53,17 +51,14 @@ function buildClock(){ //creates the requisite arrays to describe the various or
 
     ArrayContainer = [hoursFirst, hoursSecond, minutesFirst, minutesSecond, secondsFirst, secondsSecond];
 
-    scene.add(hoursFirst[0], hoursFirst[1]);
-    scene.add(hoursSecond[0], hoursSecond[1], hoursSecond[2], hoursSecond[3]);
-    scene.add(minutesFirst[0], minutesFirst[1], minutesFirst[2]);
-    scene.add(minutesSecond[0], minutesSecond[1], minutesSecond[2], minutesSecond[3]);
-    scene.add(secondsFirst[0], secondsFirst[1], secondsFirst[2]);
-    scene.add(secondsSecond[0], secondsSecond[1], secondsSecond[2],secondsSecond[3]);
+    for(var i = 0; i < ArrayContainer.length; i++)
+        for(var j = 0; j < ArrayContainer[i].length; j++)
+            scene.add(ArrayContainer[i][j]);
 }
 
 function createSphere(X, Y, Z){ //method is called and returns an instance of the sphere object to the caller - which then stores it in an array
     const geometry = new THREE.SphereGeometry(1, 30, 30);
-    const material = new THREE.MeshLambertMaterial( {color: 0xffff00} );
+    const material = new THREE.MeshLambertMaterial();
     const sphereInstance = new THREE.Mesh(geometry, material);
     sphereInstance.translateX(X);
     sphereInstance.translateY(Y);
@@ -71,21 +66,42 @@ function createSphere(X, Y, Z){ //method is called and returns an instance of th
     return sphereInstance;
 }
 
-function ChangeColour(sphere){ //Changes the colour of the ball thingies depending if they're "On" or "Off"
-    sphere.material.color.setHex(0xffffff);
+function SphereOn(sphere){ //Changes the colour of the ball thingies depending if they're "On" or "Off"
+    sphere.material.color.setHex(0x0E6251);
+    sphere.scale.x = 1.3;
+    sphere.scale.y = 1.3;
+    sphere.scale.z = 1.3;
 }
 
-Clock();
+function SphereOff(sphere){
+    sphere.material.color.setHex(0xD1F2EB);
+    sphere.scale.x = 1;
+    sphere.scale.y = 1;
+    sphere.scale.z = 1;
+}
+
+//Clock();
 function Clock(){ //the logic of representing time in binary x :)
+
+    ResetClock();
     var timeArray = timeConvert();
 
     for(var i = 0; i < timeArray.length; i++){
         var currentBin = IntToBin(timeArray[i]);
 
+        var arrayIndex = 0;
         for(var j = currentBin.length; j > 0; j--){
-            if(currentBin.charAt(j-1) == 1)
-                ChangeColour(ArrayContainer[i][j-1]);
+            if(currentBin.charAt(j -1) == 1)
+                SphereOn(ArrayContainer[i][arrayIndex]);
+            arrayIndex++
         }
+    }
+}
+
+function ResetClock(){ //bit of a hack at the moment reseting all of the orb things to plain colour
+    for(var i = 0; i < ArrayContainer.length; i++){
+        for(var j = 0; j < ArrayContainer[i].length; j++)
+            SphereOff(ArrayContainer[i][j]);
     }
 }
 
@@ -101,14 +117,11 @@ function IntToBin(int){
     return (int >>> 0).toString(2);
 }
 
-var axisHelper = new THREE.AxesHelper(5);
-scene.add(axisHelper);
-
-render();
-
 function render(){
     Clock();
     requestAnimationFrame( render );
     renderer.render(scene, camera);
 }
+render();
+
 
