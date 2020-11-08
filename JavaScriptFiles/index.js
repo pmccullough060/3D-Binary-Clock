@@ -66,14 +66,14 @@ function createSphere(X, Y, Z){ //method is called and returns an instance of th
     return sphereInstance;
 }
 
-function SphereOn(sphere){ //Changes the colour of the ball thingies depending if they're "On" or "Off"
+function SphereOn(sphere){ //Changes the colour and size of the ball thingies depending if they're "On" or "Off"
     sphere.material.color.setHex(0x0E6251);
     sphere.scale.x = 1.3;
     sphere.scale.y = 1.3;
     sphere.scale.z = 1.3;
 }
 
-function SphereOff(sphere){
+function SphereOff(sphere){ //Changes the colour and size of the ball thingies depending if they're "On" or "Off"
     sphere.material.color.setHex(0xD1F2EB);
     sphere.scale.x = 1;
     sphere.scale.y = 1;
@@ -82,8 +82,7 @@ function SphereOff(sphere){
 
 //Clock();
 function Clock(){ //the logic of representing time in binary x :)
-
-    ResetClock();
+    ResetClock(); //quite expensive reseting the clock all the time.. need to refactor this.. probs
     var timeArray = timeConvert();
 
     for(var i = 0; i < timeArray.length; i++){
@@ -113,11 +112,11 @@ function timeConvert(){ // converts -> 11:04:43 to [1,1,0,4,4,3] so it can be di
     return timeArray;
 }
 
-function IntToBin(int){
+function IntToBin(int){ //converts an integer number to a binary string: 6 is 110 etc...
     return (int >>> 0).toString(2);
 }
 
-function render(){
+function render(){ //render loop running at 60Hertz
     Clock();
     requestAnimationFrame( render );
     renderer.render(scene, camera);
