@@ -54,7 +54,7 @@ function buildClock(){ //creates the requisite arrays to describe the various or
     secondsFirst = [createSphere(0, 4.5, 0), createSphere(0, 4.5, 3), createSphere(0, 4.5, 6)];
     secondsSecond = [createSphere(0, 7.5, 0), createSphere(0, 7.5, 3), createSphere(0, 7.5, 6), createSphere(0, 7.5, 9)];
 
-    var ArrayContainer = [hoursFirst, hoursSecond, minutesFirst, minutesSecond, secondsFirst, secondsSecond];
+    ArrayContainer = [hoursFirst, hoursSecond, minutesFirst, minutesSecond, secondsFirst, secondsSecond];
 
     scene.add(hoursFirst[0], hoursFirst[1]);
     scene.add(hoursSecond[0], hoursSecond[1], hoursSecond[2], hoursSecond[3]);
@@ -84,18 +84,32 @@ function Clock(){ //the logic of representing time in binary x :)
     var hour = d.getHours();
 
     for(var i = 0; i < 2; i++){
-
         var hourInt = IntAtIndex(hour, i);
         var hourBin = IntToBin(hourInt);
 
-        for(var j = hourBin.length; j > 0; j--){
-            var currentChar = hourBin.charAt(j);
-            console.log(j);
+        console.log(ArrayContainer);
+
+        for(var j = hourBin.length; j > 0; j--){ //iterating from the "tail" of the binary string to the "head"...
+            if(hourBin.charAt(j-1) == 1){
+                ChangeColour(ArrayContainer[i][j]);
+            }   
         }
     }
+}
 
-    var firstHourValue = IntAtIndex(hour, 1);
-    var BinaryString = IntToBin(firstHourValue);
+timeConvert();
+function timeConvert(){ // converts -> 11:04:43 to [1,1,0,4,4,3] so it can be displayed on the binary clock
+    var date = new Date();
+    var dateString = date.toTimeString().split(' ')[0]; //getting HH:MM:SS format
+    dateString = dateString.replace(/:/gi,'');
+
+
+    var timeArray = new Array(5);
+
+    
+
+
+    return timeArray;
 }
 
 function IntAtIndex(integerValue, index){
@@ -106,8 +120,6 @@ function IntAtIndex(integerValue, index){
 function IntToBin(int){
     return (int >>> 0).toString(2);
 }
-
-
 
 var axisHelper = new THREE.AxesHelper(5);
 scene.add(axisHelper);
