@@ -3,7 +3,7 @@
 var scene, camera, renderer;
 
 initScene();
-function initScene(){ //creating the three.js scene, camera, renderer and appending to document body..
+function initScene(){ //creating the three.js scene, camera, renderer and appending to document body.
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.up = new THREE.Vector3(0, 0, 1);
